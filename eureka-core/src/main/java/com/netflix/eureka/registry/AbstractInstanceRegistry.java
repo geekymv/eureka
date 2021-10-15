@@ -1215,7 +1215,7 @@ public abstract class AbstractInstanceRegistry implements InstanceRegistry {
             evictionTaskRef.get().cancel();
         }
         evictionTaskRef.set(new EvictionTask());
-        evictionTimer.schedule(evictionTaskRef.get(),
+        evictionTimer.schedule(evictionTaskRef.get(),// 剔除下线的实例，每60s执行一次
                 serverConfig.getEvictionIntervalTimerInMs(),
                 serverConfig.getEvictionIntervalTimerInMs());
     }
@@ -1298,7 +1298,7 @@ public abstract class AbstractInstanceRegistry implements InstanceRegistry {
         @Override
         public boolean offer(E e) {
             while (!delegate.offer(e)) {
-                delegate.poll();
+                delegate.poll(); // 如果队列满了，就从队列头部移除一个元素，再次尝试放入
             }
             return true;
         }
